@@ -95,7 +95,7 @@ class DialogflowService extends EventEmitter {
     this.sessionId = uuid.v4();
     // Instantiates a session client
     this.sessionClient = new dialogflow.SessionsClient();
-      projectId: process.env.GOOGLE_PROJECT_ID;
+      const projectId = process.env.GOOGLE_PROJECT_ID;
     this.sessionPath = this.sessionClient.sessionPath(
       projectId,
       this.sessionId
@@ -108,8 +108,12 @@ class DialogflowService extends EventEmitter {
   }
 
   send(message) {
-    const stream = this.startPipeline();
-    stream.write(message);
+  const stream = this.startPipeline();
+  if (stream.writableEnded) {
+    console.warn("⚠️ Tried to write to ended stream. Ignoring message.");
+    return;
+  }
+  stream.write(message);
   }
 
   getFinalQueryResult() {
@@ -157,7 +161,13 @@ class DialogflowService extends EventEmitter {
           this.isReady = false;
         }
       );
-
+      this._requestStream.on("close", () => {
+        console.log("🔁 Request stream closed");
+        this.isReady = false;
+      });
+      this._requestStream.on("error", (err) => {
+        console.error("❌ Error on request stream:", err);
+      });
       this._requestStream.on("data", (data) => {
         const msg = JSON.parse(data.toString("utf8"));
         if (msg.event === "start") {
@@ -211,8 +221,10 @@ class DialogflowService extends EventEmitter {
 
   finish() {
     console.log("Disconnecting from Dialogflow");
-    this._requestStream.end();
+    if (this._requestStream && !this._requestStream.writableEnded) {
+      this._requestStream.end();
   }
+    this.isReady = false;
 }
 
 module.exports = {
