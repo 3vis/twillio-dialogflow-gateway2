@@ -109,8 +109,8 @@ class DialogflowService extends EventEmitter {
 
   send(message) {
   const stream = this.startPipeline();
-  if (stream.writableEnded) {
-    console.warn("⚠️ Tried to write to ended stream. Ignoring message.");
+  if (!stream || stream.writableEnded) {
+    console.warn("⚠️ Tried to write to ended or missing stream. Ignoring message.");
     return;
   }
   stream.write(message);
@@ -159,6 +159,7 @@ class DialogflowService extends EventEmitter {
           }
           // Update the state so as to create a new pipeline
           this.isReady = false;
+          this._requestStream = null; // ✅ Clear the stream to prevent future writes
         }
       );
       this._requestStream.on("close", () => {
@@ -224,6 +225,7 @@ class DialogflowService extends EventEmitter {
     if (this._requestStream && !this._requestStream.writableEnded) {
       this._requestStream.end();
   }
+    this._requestStream = null;
     this.isReady = false;
 }
 }
