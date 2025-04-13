@@ -4,7 +4,7 @@ const uuid = require("uuid");
 const dialogflow = require("dialogflow").v2beta1;
 const structjson = require("structjson");
 const WaveFile = require("wavefile").WaveFile;
-process.env.GOOGLE_APPLICATION_CREDENTIALS = "./key.json";
+
 
 
 const projectId = process.env.DIALOGFLOW_PROJECT_ID;
