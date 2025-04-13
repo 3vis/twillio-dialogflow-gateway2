@@ -81,7 +81,7 @@ class DialogflowService extends EventEmitter {
     // Instantiates a session client
     this.sessionClient = new dialogflow.SessionsClient();
       projectId: process.env.GOOGLE_PROJECT_ID,
-  });
+  }
     this.sessionPath = this.sessionClient.sessionPath(
       projectId,
       this.sessionId
