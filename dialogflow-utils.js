@@ -86,8 +86,7 @@ function createAudioRequestStream() {
       // This is mulaw/8000 base64-encoded
       return callback(
         this.isStopped ? null : null,
-        this.isStopped ? null : { inputAudio: msg.media.payload }
-    );
+        this.isStopped ? null : { inputAudio: msg.media.payload });
   });
 }
 
