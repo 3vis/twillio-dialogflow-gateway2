@@ -5,6 +5,21 @@ const dialogflow = require("dialogflow").v2beta1;
 const structjson = require("structjson");
 const WaveFile = require("wavefile").WaveFile;
 
+const fs = require("fs");
+const path = require("path");
+
+// ✅ Dynamically create key file from base64 string
+if (process.env.GOOGLE_KEY_BASE64) {
+  const keyFilePath = path.join(__dirname, "tmp-key.json");
+  fs.writeFileSync(
+    keyFilePath,
+    Buffer.from(process.env.GOOGLE_KEY_BASE64, "base64").toString("utf-8")
+  );
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = keyFilePath;
+  console.log("✅ Created temporary Google credentials at:", keyFilePath);
+} else {
+  console.error("❌ GOOGLE_KEY_BASE64 is not defined");
+}
 
 
 const projectId = process.env.DIALOGFLOW_PROJECT_ID;
