@@ -4,6 +4,7 @@ const uuid = require("uuid");
 const dialogflow = require("dialogflow").v2beta1;
 const structjson = require("structjson");
 const WaveFile = require("wavefile").WaveFile;
+process.env.GOOGLE_APPLICATION_CREDENTIALS = "./key.json";
 
 
 const projectId = process.env.DIALOGFLOW_PROJECT_ID;
@@ -78,11 +79,7 @@ class DialogflowService extends EventEmitter {
     super();
     this.sessionId = uuid.v4();
     // Instantiates a session client
-    this.sessionClient = new dialogflow.SessionsClient({
-      credentials: {
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  },
+    this.sessionClient = new dialogflow.SessionsClient();
       projectId: process.env.GOOGLE_PROJECT_ID,
 });
     this.sessionPath = this.sessionClient.sessionPath(
