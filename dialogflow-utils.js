@@ -78,7 +78,13 @@ class DialogflowService extends EventEmitter {
     super();
     this.sessionId = uuid.v4();
     // Instantiates a session client
-    this.sessionClient = new dialogflow.SessionsClient();
+    this.sessionClient = new dialogflow.SessionsClient({
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  },
+      projectId: process.env.GOOGLE_PROJECT_ID,
+});
     this.sessionPath = this.sessionClient.sessionPath(
       projectId,
       this.sessionId
