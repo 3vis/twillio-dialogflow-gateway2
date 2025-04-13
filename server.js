@@ -6,7 +6,7 @@ const websocket = require("websocket-stream");
 const websocketStream = require("websocket-stream/stream");
 const Twilio = require("twilio");
 const { DialogflowService } = require("./dialogflow-utils");
-
+process.env.GOOGLE_APPLICATION_CREDENTIALS = "./key.json";
 const PORT = process.env.PORT || 3000;
 
 const app = express();
