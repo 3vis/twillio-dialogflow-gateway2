@@ -137,6 +137,7 @@ class DialogflowService extends EventEmitter {
       this._requestStream = new PassThrough({ objectMode: true });
       const audioStream = createAudioRequestStream();
       const detectStream = createDetectStream(
+        this._detectStream = detectStream;
         this.isFirst,
         this.sessionId,
         this.sessionPath,
@@ -203,7 +204,13 @@ class DialogflowService extends EventEmitter {
             `Ending interaction with: ${data.queryResult.fulfillmentText}`
           );
           this.finalQueryResult = data.queryResult;
-          this.stop();
+          this.stop(); {
+            console.log("Stopping Dialogflow");
+            this.isStopped = true;
+            if (this._detectStream && !this._detectStream.destroyed) {
+              this._detectStream.end();
+            }
+            this._detectStream = null;
         }
       });
       audioResponseStream.on("data", (data) => {
@@ -225,7 +232,11 @@ class DialogflowService extends EventEmitter {
     if (this._requestStream && !this._requestStream.writableEnded) {
       this._requestStream.end();
   }
+  if (this._detectStream && !this._detectStream.destroyed) {
+    this._detectStream.end();
+  }
     this._requestStream = null;
+    this._detectStream = null;
     this.isReady = false;
 }
 }
