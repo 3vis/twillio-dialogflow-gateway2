@@ -34,9 +34,10 @@ app.post("/twiml", (request, response) => {
 
 console.log("TWILIO_ACCOUNT_SID:", process.env.TWILIO_ACCOUNT_SID);
 console.log("TWILIO_AUTH_TOKEN:", process.env.TWILIO_AUTH_TOKEN ? "Exists ✅" : "Missing ❌");
-console.log("✅ WebSocket connection opened with Twilio");
+
 
 app.ws("/media", (ws, req) => {
+  console.log("✅ WebSocket connection opened with Twilio");
   let client;
   try {
     client = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
