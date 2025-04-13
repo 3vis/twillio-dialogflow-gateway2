@@ -87,6 +87,7 @@ function createAudioRequestStream() {
       return callback(
         this.isStopped ? null : null,
         this.isStopped ? null : { inputAudio: msg.media.payload });
+    },
   });
 }
 
