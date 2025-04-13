@@ -112,7 +112,7 @@ class DialogflowService extends EventEmitter {
 
   send(message) {
   const stream = this.startPipeline();
-  if (!stream || stream.writableEnded) {
+  if (!stream || stream.writableEnded || this.isStopped) {
     console.warn("⚠️ Tried to write to ended or missing stream. Ignoring message.");
     return;
   }
@@ -208,12 +208,11 @@ class DialogflowService extends EventEmitter {
           );
           this.finalQueryResult = data.queryResult;
           this.stop(); 
-          console.log("Stopping Dialogflow");
-          this.isStopped = true;
-          if (this._detectStream && !this._detectStream.destroyed) {
-          this._detectStream.end();
-          this._detectStream = null;
-        }
+          if (this._detectStream && !this._detectStream.destroyed && this._detectStream.writable) {
+            console.log("🛑 Gracefully ending detect stream");
+            this._detectStream.end();
+            this._detectStream = null;
+          }
       }
     });
       audioResponseStream.on("data", (data) => {
