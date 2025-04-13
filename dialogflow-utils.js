@@ -139,12 +139,12 @@ class DialogflowService extends EventEmitter {
       this._requestStream = new PassThrough({ objectMode: true });
       const audioStream = createAudioRequestStream();
       const detectStream = createDetectStream(
-        this._detectStream = detectStream;
         this.isFirst,
         this.sessionId,
         this.sessionPath,
         this.sessionClient
       );
+      this._detectStream = detectStream;
       const responseStream = new PassThrough({ objectMode: true });
       const audioResponseStream = createAudioResponseStream();
       if (this.isFirst) this.isFirst = false;
