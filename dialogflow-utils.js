@@ -138,7 +138,7 @@ class DialogflowService extends EventEmitter {
     if (!this.isReady) {
       // Generate the streams
       this._requestStream = new PassThrough({ objectMode: true });
-      const audioStream = createAudioRequestStream();
+      const audioStream = createAudioRequestStream(() => this.isStopped);
       const detectStream = createDetectStream(
         this.isFirst,
         this.sessionId,
