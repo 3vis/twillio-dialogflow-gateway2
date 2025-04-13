@@ -14,6 +14,28 @@ const app = express();
 expressWebSocket(app, null, {
   perMessageDeflate: false
 });
+console.log("🔧 Checking environment variables...");
+
+const requiredEnvVars = [
+  "TWILIO_ACCOUNT_SID",
+  "TWILIO_AUTH_TOKEN",
+  "DIALOGFLOW_PROJECT_ID",
+  "GOOGLE_PROJECT_ID",
+  "GOOGLE_CLIENT_EMAIL",
+  "GOOGLE_PRIVATE_KEY",
+  "GOOGLE_LANGUAGE_CODE"
+];
+
+requiredEnvVars.forEach((key) => {
+  const value = process.env[key];
+  if (!value || value === "") {
+    console.error(`❌ Missing or empty: ${key}`);
+  } else if (key === "GOOGLE_PRIVATE_KEY") {
+    console.log(`✅ ${key}: [loaded, length: ${value.length} chars]`);
+  } else {
+    console.log(`✅ ${key}: ${value}`);
+  }
+});
 
 app.engine("hbs", hbs());
 app.set("view engine", "hbs");
