@@ -35,7 +35,7 @@ app.post("/twiml", (request, response) => {
 app.ws("/media", (ws, req) => {
   let client;
   try {
-    client = new Twilio();
+    client = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
   } catch(err) {
     if (process.env.TWILIO_ACCOUNT_SID === undefined) {
       console.error('Ensure that you have set your environment variable TWILIO_ACCOUNT_SID. This can be copied from https://twilio.com/console');
