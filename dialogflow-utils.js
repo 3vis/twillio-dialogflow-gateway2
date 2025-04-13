@@ -226,7 +226,7 @@ class DialogflowService extends EventEmitter {
   }
     this.isReady = false;
 }
-
+}
 module.exports = {
   DialogflowService,
 };
