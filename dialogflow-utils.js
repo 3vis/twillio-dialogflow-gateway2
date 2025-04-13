@@ -76,7 +76,7 @@ function createAudioResponseStream() {
   });
 }
 
-function createAudioRequestStream() {
+function createAudioRequestStream(isStopped) {
   return new Transform({
     objectMode: true,
     transform: (chunk, encoding, callback) => {
